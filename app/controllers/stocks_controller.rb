@@ -10,7 +10,7 @@ class StocksController < ApplicationController
         redirect_to my_portfolio_path
       end
     else
-      flash[:danger] = 'You entered an empty the ticker'
+      flash[:danger] = 'You entered an empty ticker'
       redirect_to my_portfolio_path
     end
   end
