@@ -2,32 +2,33 @@ require 'rails_helper'
 
 RSpec.describe StocksController, type: :controller do
   let(:user) { User.new(email: 'test@example.com', password: 'password') }
-  let(:stock) { StockQuote::Stock.quote(symbol) }
+  let(:subject) { StockQuote::Stock.quote(symbol) }
 
   before { sign_in(user) }
 
-  describe 'GET#search' do
+  describe 'GET #search' do
     context 'when user entered valid params' do
-      let(:symbol) { 'GOOG' }
 
       it 'allows to search ticker' do
-        expect(stock.company_name).to eq 'Alphabet Inc.'
-      end
+        Stock.create(ticker: 'GOOG', name: 'Alphabet Inc.', last_price: 12)
+        Stock.create(ticker: 'TSLA', name: 'Tesla Inc.', last_price: 20)
+        Stock.create(ticker: 'GS', name: 'Goldman Sachs Group Inc. (The)', last_price: 40)
 
-      it 'shows valid ticker' do
-        expect(stock.symbol).to eq 'GOOG'
+        get :search, params: { ticker: 'GOOG' }
+
+        expect(response.body).to match_array(%w[GOOG TSLA GS])
       end
     end
 
     context 'when user entered invalid params' do
-      let(:symbol) { 'abcdefg' }
-
-      it 'shows error message and redirect' do
-        expect(flash[:danger]).to eq "Ticker doesn't exist"
+      it 'shows error message' do
+        get :search, params: { stock: '' }
+        expect(flash[:danger]).to eq 'You entered an empty ticker'
       end
 
-      it "doesn't allow to search" do
-
+      it 'shows error message and redirect' do
+        get :search, params: { stock: 'xyzxcva'}
+        expect(flash[:danger]).to eq "Ticker doesn't exist"
       end
     end
   end
