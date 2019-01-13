@@ -21,12 +21,19 @@ RSpec.describe User, type: :model do
   describe 'Add stock' do
     user = User.create(email: 'test@example.com', password: 'password')
 
-    context 'when user add the same stock' do
-      let(:stock) { Stock.new(name: 'Goldman Sachs', ticker: 'GS', last_price: 112.4) }
 
-      it "return false" do
-        user_stocks = UserStock.new(user: user, stock: stock)
-        expect(user_stocks.can_add_stock?('GS')).to eq true
+    context 'when user add the same stock' do
+      let(:stock) { Stock.create(name: 'Goldman Sachs', ticker: 'GS', last_price: 112.4) }
+
+      it "return true" do
+        user.stocks << stock
+        expect(user.can_add_stock?('GS')).to eq true
+      end
+
+      it "can't add stock" do
+        duplicated = Stock.new(name: 'Goldman Sachs', ticker: 'GS', last_price: 112.4)
+        user.stocks << duplicated
+        expect(user.can_add_stock?('GS')).to eq false
       end
     end
   end

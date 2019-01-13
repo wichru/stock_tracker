@@ -29,7 +29,7 @@ RSpec.describe UserStocksController, type: :controller do
 
     it 'deletes stock' do
       expect do
-        delete :destroy, params: { id: user_stock.id }
+        delete "/user_stocks/#{user_stock.id}"
       end.to change(UserStock, :count).by(-1)
       expect(response).to have_http_status(redirect)
       expect(flash[:notice]).to eq 'Stock successfully removed'
