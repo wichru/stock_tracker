@@ -9,6 +9,14 @@ class UsersController < ApplicationController
   end
 
   def search
-
+    if params[:search_param].blank?
+      flash.now[:danger] = 'You entered an empty value'
+    else
+      @users = User.search(params[:search_param], current_user)
+      flash.now[:danger] = "No users match this search criteria" if @users.blank?
+    end
+    respond_to do |format|
+      format.js { render partial: 'friends/result' }
+    end
   end
 end
