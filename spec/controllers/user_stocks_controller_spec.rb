@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe UserStocksController, type: :controller do
-  let(:user) { User.create(email: 'test@example.com', password: 'password') }
+  let(:user) { User.new(email: 'test@example.com', password: 'password') }
 
   before do
     sign_in(user)
@@ -25,7 +25,7 @@ RSpec.describe UserStocksController, type: :controller do
 
   describe 'DELETE #destroy' do
     let(:stock) { Stock.new_from_lookup('GS') }
-    let(:user_stock) { UserStock.create(user: user.id, stock: stock) }
+    let(:user_stock) { UserStock.create(user_id: user.id, stock: stock) }
 
     it 'deletes stock' do
       expect do
