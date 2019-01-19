@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe UserStocksController, type: :controller do
-  let(:user) { User.new(email: 'test@example.com', password: 'password') }
+  let(:user) { User.new(email: 'test@example.com', password: 'password').save }
 
   before do
     sign_in(user)
